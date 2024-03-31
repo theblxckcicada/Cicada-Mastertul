@@ -4,13 +4,80 @@ import sys
 import subprocess
 import socket
 import re
-from smbclient  import SambaClient,SambaClientError # Install using: pip install pysmb
-import uuid
-
-from smbprotocol.connection import Connection, Dialects
 
 
-user_args = ""
+# application class 
+
+class AppArg:
+    def __init__(self, username=None, domain=None, password=None, ntlm_hash=None,
+                 target=None, wordlist='rockyou.txt', kerberos=False, ldap=False,
+                 smb=False, full=False, winrm=False, bloodhound=False, crack=False):
+        self._username = username
+        self._domain = domain
+        self._password = password
+        self._ntlm_hash = ntlm_hash
+        self._target = target
+        self._wordlist = wordlist
+        self._kerberos = kerberos
+        self._ldap = ldap
+        self._smb = smb
+        self._full = full
+        self._winrm = winrm
+        self._bloodhound = bloodhound
+        self._crack = crack
+
+    @property
+    def username(self):
+        return self._username
+
+    @property
+    def domain(self):
+        return self._domain
+
+    @property
+    def password(self):
+        return self._password
+
+    @property
+    def ntlm_hash(self):
+        return self._ntlm_hash
+
+    @property
+    def target(self):
+        return self._target
+
+    @property
+    def wordlist(self):
+        return self._wordlist
+
+    @property
+    def kerberos(self):
+        return self._kerberos
+
+    @property
+    def ldap(self):
+        return self._ldap
+
+    @property
+    def smb(self):
+        return self._smb
+
+    @property
+    def full(self):
+        return self._full
+
+    @property
+    def winrm(self):
+        return self._winrm
+
+    @property
+    def bloodhound(self):
+        return self._bloodhound
+
+    @property
+    def crack(self):
+        return self._crack
+
 
 
 def create_directories_if_not_exist(*directories):
@@ -71,16 +138,15 @@ def get_args():
 	    parser.add_argument('--bloodhound', action='store_true', help='Enable bloodhound mode Enumeration')
 	    parser.add_argument('--crack', action='store_true', help='Crack Found Hashes')
 	    args = parser.parse_args()
-	    return args
+	    return AppArg(**vars(args))
 
 
 # get arguments
-user_args = get_args()
-    
+app_args = get_args()
 # Define directory paths
 current_directory = os.getcwd()
 base_directory = os.path.join(current_directory, "cicada_scan")
-target_directory = os.path.join(base_directory, user_args.target)
+target_directory = os.path.join(base_directory, app_args.target)
 smb_directory = os.path.join(target_directory, "smb_results")
 lookupsid_directory = os.path.join(target_directory, "lookupsid_results")
 kerberos_directory = os.path.join(target_directory, "kerberos_results")
