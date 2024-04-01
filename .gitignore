@@ -1,0 +1,6 @@
+# Ignore everything
+*
+
+# Except stet.py
+!stet.py
+!.gitignore
