@@ -2,8 +2,6 @@
 
 ```markdown
 ## Help Menu
-
-```
 usage: cicada-mastertul.py [-h] [-u USERNAME] [-d DOMAIN] [-p PASSWORD] [-H NTLM_HASH] [-t TARGET] [-w WORDLIST]
                       [-us USERSFILE] [--kerberos] [--lookupsid] [--npusers] [--userspn] [--ldap]
                       [--smb] [--full] [--winrm] [--bloodhound] [--crack]
