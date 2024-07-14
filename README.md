@@ -28,6 +28,7 @@ optional arguments:
                         Target host or IP address
   -w WORDLIST, --wordlist WORDLIST
                         Password list (default: rockyou.txt)
+  --setup               Fix Impacket scripts
   -us USERSFILE, --usersfile USERSFILE
                         List of domain users
   --kerberos            Enable kerberoasting mode
