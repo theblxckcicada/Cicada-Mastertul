@@ -331,10 +331,7 @@ def validate_arguments():
         else:
             print(f'{RED}[-] Run Setup as root{RESET}')  
         sys.exit(1)
-    if not app_args.target  or  not app_args.username :
-        parser.print_help()
-        sys.exit(1)
-    if not app_args.password  and not app_args.ntlm_hash:
+    if not app_args.target :
         parser.print_help()
         sys.exit(1)
 
@@ -664,7 +661,7 @@ def generate_ip_addresses(network_address):
 
 def read_target_ip_address():
     if '/' in app_args.target:
-        print(f"{BLUE}[!x!] Getting Alive IP addresses...{RESET}")
+        print(f"{BLUE}[!x!] Retrieving Alive IP addresses...{RESET}")
         list = (str)(app_args.target).split('/')
         ip_address = list[0]
         isValid = validate_ip(ip_address)
@@ -696,5 +693,6 @@ if __name__ == "__main__":
             handle_request(app_args.username,app_args.password,app_args.ntlm_hash,ip,app_args.domain)
         remove_empty_files(base_directory_map[alive_ip[0]])
     except Exception as e:
+        remove_empty_files(base_directory_map[alive_ip[0]])
         print(f"{RED}[-] {str(e)}{RESET}")
 
