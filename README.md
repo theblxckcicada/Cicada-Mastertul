@@ -1,6 +1,13 @@
 # Cicada-Mastertul
 
+## Installation and Setup 
+To set up Impacket and use the tool, you'll need to run the following command. Note: If you have set up your Kali using Dewalt's pimpmykali (https://github.com/Dewalt-arch/pimpmykali), you don't need to run the setup script.
 
+```markdown
+sudo python3 cicada-mastertul.py --setup
+ ```
+ 
+![image](https://github.com/user-attachments/assets/e703cf85-bf49-4fbd-be40-ba9dedbe30d2)
 
 
 https://github.com/theblxckcicada/Cicada-Mastertul/assets/68484817/77d0adb5-2223-4ae9-b93a-3d15b4bc8eaa
