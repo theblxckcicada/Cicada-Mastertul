@@ -557,51 +557,74 @@ def enum_bloodhound(username,password,hash,server,domain):
         command = f"bloodhound-python -d {domain} -u '{username}' --hashes '{hash}' -ns {server} -c all"    
     run_command(command)
     move_bloodhound_files(server)
+
+
+
+def fix_impacket_array():
+    arr = [
+        'addcomputer.py', 'atexec.py', 'dcomexec.py', 'dpapi.py', 'esentutl.py', 'findDelegation.py', 'GetADUsers.py',
+        'getArch.py', 'GetNPUsers.py', 'getPac.py', 'getST.py', 'getTGT.py', 'GetUserSPNs.py', 'goldenPac.py',
+        'karmaSMB.py', 'kintercept.py', 'lookupsid.py', 'mimikatz.py', 'mqtt_check.py', 'mssqlclient.py',
+        'mssqlinstance.py', 'netview.py', 'nmapAnswerMachine.py', 'ntfs-read.py', 'ntlmrelayx.py', 'ping6.py',
+        'ping.py', 'psexec.py', 'raiseChild.py', 'rdp_check.py', 'registry-read.py', 'reg.py', 'rpcdump.py',
+        'rpcmap.py', 'sambaPipe.py', 'samrdump.py', 'secretsdump.py', 'services.py', 'smbclient.py', 'smbexec.py',
+        'smbrelayx.py', 'smbserver.py', 'sniffer.py', 'sniff.py', 'split.py', 'ticketConverter.py', 'ticketer.py',
+        'wmiexec.py', 'wmipersist.py', 'wmiquery.py', 'addcomputer.pyc', 'atexec.pyc', 'dcomexec.pyc', 'dpapi.pyc',
+        'esentutl.pyc', 'findDelegation.pyc', 'GetADUsers.pyc', 'getArch.pyc', 'GetNPUsers.pyc', 'getPac.pyc',
+        'getST.pyc', 'getTGT.pyc', 'GetUserSPNs.pyc', 'goldenPac.pyc', 'karmaSMB.pyc', 'kintercept.pyc',
+        'lookupsid.pyc', 'mimikatz.pyc', 'mqtt_check.pyc', 'mssqlclient.pyc', 'mssqlinstance.pyc', 'netview.pyc',
+        'nmapAnswerMachine.pyc', 'ntfs-read.pyc', 'ntlmrelayx.pyc', 'ping6.pyc', 'ping.pyc', 'psexec.pyc',
+        'raiseChild.pyc', 'rdp_check.pyc', 'registry-read.pyc', 'reg.pyc', 'rpcdump.pyc', 'rpcmap.pyc', 'sambaPipe.pyc',
+        'samrdump.pyc', 'secretsdump.pyc', 'services.pyc', 'smbclient.pyc', 'smbexec.pyc', 'smbrelayx.pyc',
+        'smbserver.pyc', 'sniffer.pyc', 'sniff.pyc', 'split.pyc', 'ticketConverter.pyc', 'ticketer.pyc', 'wmiexec.pyc',
+        'wmipersist.pyc', 'wmiquery.pyc'
+    ]
+
+    for impacket_file in arr:
+        paths = [
+            f"/usr/bin/{impacket_file}",
+            f"/usr/local/bin/{impacket_file}",
+            f"{os.path.expanduser('~')}/.local/bin/{impacket_file}",
+            f"/home/$finduser/.local/bin/{impacket_file}"
+        ]
+        for path in paths:
+            if os.path.exists(path):
+                os.remove(path)
+
 def fix_impacket():
+    # Uninstall impacket
+    run_command("pip uninstall impacket -y")
+    run_command("pip3 uninstall impacket --break-system-packages -y")
+
+    print(f"{ORANGE}*******************************************************************{RESET}")
+    print(f"{BLUE}[!x!] Fixing and installing Impacket Scripts...{RESET}")
+    print(f"{ORANGE}*******************************************************************{RESET}")
     try:
-        silent = ""
-        print(f"{ORANGE}*******************************************************************{RESET}")
-        print(f"{BLUE}[!x!] Fixing and installing Impacket Scripts...{RESET}")
-        print(f"{ORANGE}*******************************************************************{RESET}")
-        # Uninstall impacket using pip and pip3
-        subprocess.run("pip uninstall impacket -y".split(), stdout=subprocess.DEVNULL, stderr=subprocess.DEVNULL)
-        subprocess.run("pip3 uninstall impacket --break-system-packages -y".split(), stdout=subprocess.DEVNULL, stderr=subprocess.DEVNULL)
-        
-        # Download impacket 0.9.19 tarball
-        url = "https://github.com/SecureAuthCorp/impacket/releases/download/impacket_0_9_19/impacket-0.9.19.tar.gz"
-        tarball_path = "/tmp/impacket-0.9.19.tar.gz"
-        urllib.request.urlretrieve(url, tarball_path)
-        
-        # Extract tarball
-        extract_path = "/opt/impacket-0.9.19"
-        shutil.unpack_archive(tarball_path, extract_path, "gztar")
-        
-        # Change ownership and permissions
-        os.system(f"chown -R root:root {extract_path}")
-        os.system(f"chmod -R 755 {extract_path}")
-        
-        # Install impacket
-        subprocess.run("pip install -r /opt/impacket-0.9.19/requirements.txt".split())
-        subprocess.run(["/bin/python2.7", "/opt/impacket-0.9.19/setup.py", "install"])
-        
-        # Install ldap3 with specific version for both user and root
-        subprocess.run("sudo -i -u $findrealuser pip install ldap3==2.5.1".split())
-        subprocess.run("pip install ldap3==2.5.1".split())
-        
-        # Clean up
-        os.remove(tarball_path)
-        
-        # Reinstall impacket scripts
-        subprocess.run("apt -y reinstall python3-impacket impacket-scripts".split(), stdout=subprocess.DEVNULL, stderr=subprocess.DEVNULL)
-        
-        # Print installation messages 
-        greenplus = "+"
-        print(f"\n  {greenplus} installed: impacket-0.9.19 python-pip wheel impacket flask pyasn1")
-        print(f"\n  {greenplus} installed: lsassy pycryptodomes pyOpenSSL ldap3 ldapdomaindump")
-        print(f"\n  {greenplus} installed: python3-pip python3-impacket impacket-scripts")
+        # Clean impacket files
+        fix_impacket_array()
+
+        # Download and install impacket
+        run_command("wget https://github.com/SecureAuthCorp/impacket/releases/download/impacket_0_9_19/impacket-0.9.19.tar.gz -O /tmp/impacket-0.9.19.tar.gz")
+        run_command("tar xfz /tmp/impacket-0.9.19.tar.gz -C /opt")
+        os.chdir("/opt")
+        shutil.chown("impacket-0.9.19", user="root", group="root")
+        os.chmod("impacket-0.9.19", 0o755)
+        os.chdir("/opt/impacket-0.9.19")
+        run_command("pip install -r requirements.txt")
+        run_command("/bin/python2.7 ./setup.py install")
+        run_command("sudo -i -u $findrealuser pip install ldap3==2.5.1")
+        run_command("pip install ldap3==2.5.1")
+        os.remove("/tmp/impacket-0.9.19.tar.gz")
+        run_command("apt -y reinstall python3-impacket impacket-scripts")
+
+        # Print installed packages
+        print("\n  Installed: impacket-0.9.19 python-pip wheel impacket flask pyasn1")
+        print("\n  Installed: lsassy pycryptodomes pyOpenSSL ldap3 ldapdomaindump")
+        print("\n  Installed: python3-pip python3-impacket impacket-scripts")
         print(f"{GREEN}[+] Done!! Enjoy!{RESET}")
-    except Exception as e:
+    except e:
         print(f"{RED}[-] {str(e)}{RESET}")
+
 
 def handle_request(username,password,hash,server,domain):
     if app_args.full or not flag_supplied:
