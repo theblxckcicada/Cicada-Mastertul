@@ -1,4 +1,6 @@
 # Cicada-Mastertul
+## Description 
+The tool allows users to authenticate with a target domain using either usernames and passwords or NTLM hashes, and it provides a wide range of enumeration options to gather information about domain users, services, and vulnerabilities. It can also assist with cracking password hashes and extracting sensitive information for further exploitation.
 
 ## Installation and Setup 
 To set up Impacket and use the tool, you'll need to run the following command. Note: If you have set up your Kali using Dewalt's pimpmykali (https://github.com/Dewalt-arch/pimpmykali), you don't need to run the setup script.
